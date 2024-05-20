@@ -40,7 +40,7 @@
         </button>
         <Menu
           v-model="showMenu"
-          :items="[{ text: '名称A-Z' }, { text: '大小↑' } ,{ text: '大小↓' }, { text: '粘贴' }, { text: '关于 LI Innovation 共享云存储' }]"
+          :items="[{ text: '名称A-Z' }, { text: '大小↑' } ,{ text: '大小↓' }, { text: '粘贴' }, { text: '关于' }]"
           @click="onMenuClick"
         />
       </div>
@@ -133,13 +133,13 @@
       </li>
     </ul>
     <div v-if="loading" style="margin-top: 12px; text-align: center">
-      <span>加载中...</span>
+      <span>正在搜寻 LI Innovation 数据库... 由 LI Innovation Cloud 强力驱动</span>
     </div>
     <div
       v-else-if="!filteredFiles.length && !filteredFolders.length"
       style="margin-top: 12px; text-align: center"
     >
-      <span>没有文件</span>
+      <span>未在本文件夹查询到相关文件</span>
     </div>
     <Dialog v-model="showContextMenu">
       <div
@@ -150,7 +150,7 @@
       <ul v-if="typeof focusedItem === 'string'" class="contextmenu-list">
         <li>
           <button @click="copyLink(`/?p=${encodeURIComponent(focusedItem)}`)">
-            <span>复制链接</span>
+            <span>复制URL</span>
           </button>
         </li>
         <li>
@@ -158,7 +158,7 @@
             style="color: red"
             @click="removeFile(focusedItem + '_$folder$')"
           >
-            <span>删除</span>
+            <span>永久删除</span>
           </button>
         </li>
       </ul>
@@ -180,12 +180,12 @@
         </li>
         <li>
           <button @click="copyLink(`/raw/${focusedItem.key}`)">
-            <span>复制链接</span>
+            <span>复制URL</span>
           </button>
         </li>
         <li>
           <button style="color: red" @click="removeFile(focusedItem.key)">
-            <span>删除</span>
+            <span>永久删除</span>
           </button>
         </li>
       </ul>
@@ -326,7 +326,7 @@ onMenuClick(text) {
       break;
     case "粘贴":
       return this.pasteFile();
-    case "关于 LI Innovation 共享云存储":
+    case "关于":
       window.open("https://liiproject.org/liidb", "_blank");
       break;
   }
@@ -461,7 +461,7 @@ onMenuClick(text) {
         }
         document.title = `${
           this.cwd.replace(/.*\/(?!$)|\//g, "") || "/"
-        } - LII共享云存储`;
+        } - LI Innovation Cloud`;
       },
       immediate: true,
     },
