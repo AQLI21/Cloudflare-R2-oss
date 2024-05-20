@@ -246,4 +246,75 @@ export default {
 
     onUploadClicked(fileElement) {
       if (!fileElement.value) return;
-      this.uploadFiles(fileElement
+      this.uploadFiles(fileElement.files);
+    },
+
+    pasteFile() {
+      const file = this.clipboard;
+      if (typeof file === "string") {
+        return this.copyPaste(file, this.cwd + file.split("/").pop());
+      }
+      return this.uploadFiles([file]);
+    },
+
+    async removeFile(file) {
+      try {
+        if (window.confirm(`Are you sure you want to delete ${file}?`)) {
+          await axios.delete(`/api/write/items/${file}`);
+          this.fetchFiles();
+        }
+      } catch (error) {
+        console.log(`Delete ${file} failed`, error);
+      }
+    },
+
+    renameFile(file) {
+      const dest = window.prompt("重命名文件为", file);
+      if (!dest) return;
+      const prefix = file.split("/").slice(0, -1).join("/") + "/";
+      return this.copyPaste(file, prefix + dest).then(() =>
+        this.removeFile(file)
+      );
+    },
+
+    async uploadFiles(files) {
+      if (!files.length) return;
+      this.uploadQueue = [...this.uploadQueue, ...files];
+      const next = async () => {
+        const file = this.uploadQueue.shift();
+        if (!file) return this.fetchFiles();
+        try {
+          this.uploadProgress = 0;
+          await multipartUpload(
+            file,
+            `${this.cwd}${file.webkitRelativePath || file.name}`,
+            (progress) => (this.uploadProgress = progress)
+          );
+          this.uploadProgress = null;
+        } catch (error) {
+          fetch("/api/write/")
+            .then((value) => {
+              if (value.redirected) window.location.href = value.url;
+            })
+            .catch(() => {});
+          console.log(`Upload ${file.name} failed`, error);
+        }
+        await next();
+      };
+      next();
+    },
+  },
+
+  mounted() {
+    this.fetchFiles();
+  },
+
+  components: {
+    Dialog,
+    Menu,
+    MimeIcon,
+    UploadPopup,
+  },
+};
+</script>
+
