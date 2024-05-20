@@ -50,7 +50,9 @@ input[type="search"] {
   border: none;
   border-radius: 16px;
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 12px 8px 50px; /* 左边填充50px */
+  background: url('https://drive.liiverse.com/raw/liiico') no-repeat 10px center; /* 添加背景图像 */
+  background-size: 30px 30px; /* 背景图像大小 */
 }
 
 .file-item {
@@ -174,11 +176,3 @@ button {
   transition: transform 0.2s ease-out;
 }
 
-.slide-up-leave-active {
-  transition: transform 0.2s ease-in;
-}
-
-.slide-up-enter-from,
-.slide-up-leave-to {
-  transform: translateY(100%);
-}
