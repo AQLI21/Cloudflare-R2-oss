@@ -46,7 +46,7 @@ a {
 }
 
 input[type="search"] {
-  background-color: #b3b3b3;
+background-color: whitesmoke;
   border: none;
   border-radius: 16px;
   width: 100%;
