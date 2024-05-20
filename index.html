@@ -14,12 +14,7 @@
     <link rel="icon" type="image/png" href="https://drive.liiverse.com/raw/liiico" />
   </head>
   <body>
-    <div id="app">
-      <form>
-        <input type="search" placeholder="搜索..." />
-        <button type="submit">Search</button>
-      </form>
-    </div>
+    <div id="app"></div>
     <script>
       const { loadModule } = window["vue3-sfc-loader"];
       const options = {
@@ -47,19 +42,16 @@
             loadModule("/assets/App.vue", options)
           ),
         },
-        template: `
-          <div>
-            <form>
-              <input type="search" placeholder="搜索..." />
-              <button type="submit">Search</button>
-            </form>
-            <App></App>
-          </div>
-        `,
+        template: "<App></App>",
       });
 
       app.mount("#app");
     </script>
+
+    <script type="module"></script>
+  </body>
+</html>
+
 
     <script type="module"></script>
   </body>
