@@ -40,7 +40,7 @@
         </button>
         <Menu
           v-model="showMenu"
-          :items="[{ text: '名称A-Z' }, { text: '大小↑' } ,{ text: '大小↓' }, { text: '粘贴' }]"
+          :items="[{ text: '名称A-Z' }, { text: '大小↑' } ,{ text: '大小↓' }, { text: '粘贴' }, { text: '关于 LI Innovation 共享云存储' }]"
           @click="onMenuClick"
         />
       </div>
@@ -257,7 +257,7 @@ export default {
 
     async createFolder() {
       try {
-        const folderName = window.prompt("请输入文件夹名称");
+        const folderName = window.prompt("创建-请输入文件夹名称");
         if (!folderName) return;
         this.showUploadPopup = false;
         const uploadUrl = `/api/write/items/${this.cwd}${folderName}/_$folder$`;
@@ -313,30 +313,33 @@ export default {
       this.uploadFiles(files);
     },
 
-    onMenuClick(text) {
-      switch (text) {
-        case "名称A-Z":
-          this.order = null;
-          break;
-        case "大小↑":
-          this.order = "大小↑";
-          break;
-        case "大小↓":
-          this.order = "大小↓";
-          break;
-        case "粘贴":
-          return this.pasteFile();
-      }
-      this.files.sort((a, b) => {
-        if (this.order === "大小↑") {
-          return a.size - b.size;
-        } else if (this.order === "大小↓") {
-          return b.size - a.size;
-        } else {
-          return a.key.localeCompare(b.key);
-        }
-      });
-    },
+onMenuClick(text) {
+  switch (text) {
+    case "名称A-Z":
+      this.order = null;
+      break;
+    case "大小↑":
+      this.order = "大小↑";
+      break;
+    case "大小↓":
+      this.order = "大小↓";
+      break;
+    case "粘贴":
+      return this.pasteFile();
+    case "关于 LI Innovation 共享云存储":
+      window.open("https://liiproject.org/liidb", "_blank");
+      break;
+  }
+  this.files.sort((a, b) => {
+    if (this.order === "大小↑") {
+      return a.size - b.size;
+    } else if (this.order === "大小↓") {
+      return b.size - a.size;
+    } else {
+      return a.key.localeCompare(b.key);
+    }
+  });
+},
 
     onUploadClicked(fileElement) {
       if (!fileElement.value) return;
@@ -426,7 +429,7 @@ export default {
     },
 
     async renameFile(key) {
-      const newName = window.prompt("重命名为:");
+      const newName = window.prompt("重命名文件为:");
       if (!newName) return;
       await this.copyPaste(key, `${this.cwd}${newName}`);
       await axios.delete(`/api/write/items/${key}`);
@@ -458,7 +461,7 @@ export default {
         }
         document.title = `${
           this.cwd.replace(/.*\/(?!$)|\//g, "") || "/"
-        } - 文件库`;
+        } - LII共享云存储`;
       },
       immediate: true,
     },
