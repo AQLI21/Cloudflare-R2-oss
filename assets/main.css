@@ -46,13 +46,16 @@ a {
 }
 
 input[type="search"] {
-  background-color: whitesmoke;
+  background-color: #b3b3b3;
   border: none;
   border-radius: 16px;
   width: 100%;
   padding: 8px 12px 8px 50px; /* 左边填充50px */
   background: url('https://drive.liiverse.com/raw/liiico') no-repeat 10px center; /* 添加背景图像 */
   background-size: 30px 30px; /* 背景图像大小 */
+  position: relative;
+  font-size: 16px;
+  color: black;
 }
 
 .file-item {
