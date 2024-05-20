@@ -97,6 +97,8 @@
 </template>
 
 <script>
+import axios from 'axios'; // 添加此导入
+
 import {
   generateThumbnail,
   blobDigest,
@@ -109,28 +111,30 @@ import MimeIcon from "./MimeIcon.vue";
 import UploadPopup from "./UploadPopup.vue";
 
 export default {
-  data: () => ({
-    cwd: new URL(window.location).searchParams.get("p") || "",
-    files: [],
-    folders: [],
-    clipboard: null,
-    focusedItem: null,
-    loading: false,
-    order: null,
-    search: "",
-    showContextMenu: false,
-    showMenu: false,
-    showUploadPopup: false,
-    uploadProgress: null,
-    uploadQueue: [],
-  }),
+  data() {
+    return {
+      cwd: new URL(window.location).searchParams.get("p") || "",
+      files: [],
+      folders: [],
+      clipboard: null,
+      focusedItem: null,
+      loading: false,
+      order: null,
+      search: "",
+      showContextMenu: false,
+      showMenu: false,
+      showUploadPopup: false,
+      uploadProgress: null,
+      uploadQueue: [],
+    };
+  },
 
   computed: {
     filteredFiles() {
       let files = this.files;
       if (this.search) {
         files = files.filter((file) =>
-          file.key.split("/").pop().includes(this.search)
+          file.key.split("/").slice(-1)[0].includes(this.search)
         );
       }
       return files;
@@ -181,15 +185,13 @@ export default {
       this.folders = [];
       this.loading = true;
       fetch(`/api/children/${this.cwd}`)
-        .then((res) => res.json())
+        .then((res) => res.json
         .then((files) => {
           this.files = files.value;
-          if (this.order) {
-            this.files.sort((a, b) => {
-              if (this.order === "size") {
-                return b.size - a.size;
-              }
-            });
+          if (this.order === "size") {
+            this.files.sort((a, b) => b.size - a.size);
+          } else {
+            this.files.sort((a, b) => a.key.localeCompare(b.key));
           }
           this.folders = files.folders;
           this.loading = false;
@@ -212,7 +214,9 @@ export default {
         files = [...ev.dataTransfer.items]
           .filter((item) => item.kind === "file")
           .map((item) => item.getAsFile());
-      } else files = ev.dataTransfer.files;
+      } else {
+        files = ev.dataTransfer.files;
+      }
       this.uploadFiles(files);
     },
 
@@ -222,26 +226,18 @@ export default {
           this.order = null;
           break;
         case "大小↑":
-          this.order = "大小↑";
+          this.order = "size";
           break;
         case "大小↓":
-          this.order = "大小↓";
+          this.order = "size";
           break;
         case "粘贴":
           return this.pasteFile();
-        case "关于 LI Innovation 共享存储库":  // 添加处理逻辑
-          window.open("https://liiproject.org/liidb", "_blank");
+        case "关于 LI Innovation 共享存储库":
+          window.open("https://example.com/about", "_blank");
           break;
       }
-      this.files.sort((a, b) => {
-        if (this.order === "大小↑") {
-          return a.size - b.size;
-        } else if (this.order === "大小↓") {
-          return b.size - a.size;
-        } else {
-          return a.key.localeCompare(b.key);
-        }
-      });
+      this.fetchFiles();
     },
 
     onUploadClicked(fileElement) {
@@ -292,11 +288,6 @@ export default {
           );
           this.uploadProgress = null;
         } catch (error) {
-          fetch("/api/write/")
-            .then((value) => {
-              if (value.redirected) window.location.href = value.url;
-            })
-            .catch(() => {});
           console.log(`Upload ${file.name} failed`, error);
         }
         await next();
@@ -317,4 +308,3 @@ export default {
   },
 };
 </script>
-
