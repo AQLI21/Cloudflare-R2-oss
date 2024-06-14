@@ -133,13 +133,13 @@
       </li>
     </ul>
     <div v-if="loading" style="margin-top: 12px; text-align: center">
-      <span>正在搜寻 LI Innovation 数据库... 由 LI Innovation Cloud 强力驱动</span>
+      <span>正在搜寻 LYNX全球数据库... 由 LI Innovation LYNX Cloud 强力驱动</span>
     </div>
     <div
       v-else-if="!filteredFiles.length && !filteredFolders.length"
       style="margin-top: 12px; text-align: center"
     >
-      <span>未在本文件夹查询到相关文件</span>
+      <span>未在本文件夹扇区查询到相关文件</span>
     </div>
     <Dialog v-model="showContextMenu">
       <div
@@ -327,7 +327,7 @@ onMenuClick(text) {
     case "粘贴":
       return this.pasteFile();
     case "关于":
-      window.open("https://liiproject.org/liidb", "_blank");
+      window.open("https://liiproject.org/ai", "_blank");
       break;
   }
   this.files.sort((a, b) => {
